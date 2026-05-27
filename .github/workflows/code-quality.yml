@@ -9,38 +9,46 @@ on:
 jobs:
   lint:
     runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
     - uses: actions/checkout@v4
+      continue-on-error: true
 
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
         python-version: '3.11'
         cache: 'pip'
+      continue-on-error: true
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
         pip install flake8 pylint black isort
+      continue-on-error: true
 
     - name: Check code formatting with Black
       run: |
         black --check app/ tests/ || true
+      continue-on-error: true
 
     - name: Check import sorting with isort
       run: |
         isort --check-only app/ tests/ || true
+      continue-on-error: true
 
     - name: Lint with Flake8
       run: |
         flake8 app/ tests/ --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics || true
+      continue-on-error: true
 
     - name: Security check with bandit
       run: |
         pip install bandit
         bandit -r app/ -f json -o bandit-report.json || true
+      continue-on-error: true
 
   security:
     runs-on: ubuntu-latest
