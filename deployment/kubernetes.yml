@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: corpus-forge-app
+  namespace: default
+  labels:
+    app: corpus-forge
+    version: v1
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: corpus-forge
+  template:
+    metadata:
+      labels:
+        app: corpus-forge
+    spec:
+      containers:
+      - name: corpus-forge
+        image: corpus-forge:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+          name: http
+        env:
+        - name: FLASK_ENV
+          value: "production"
+        - name: CORPUS_FORGE_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: corpus-forge-secrets
+              key: secret-key
+        - name: CORPUS_FORGE_UPLOADS
+          value: "/app/data/uploads"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: uploads
+          mountPath: /app/data/uploads
+      volumes:
+      - name: uploads
+        persistentVolumeClaim:
+          claimName: corpus-forge-uploads-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: corpus-forge-service
+  namespace: default
+  labels:
+    app: corpus-forge
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: 5000
+    protocol: TCP
+    name: http
+  selector:
+    app: corpus-forge
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: corpus-forge-uploads-pvc
+  namespace: default
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
