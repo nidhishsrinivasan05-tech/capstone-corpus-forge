@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    container_name: corpus-forge-app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=False
+      - CORPUS_FORGE_SECRET=${CORPUS_FORGE_SECRET:-corpus-forge-prod-key}
+      - CORPUS_FORGE_UPLOADS=${CORPUS_FORGE_UPLOADS:-/app/data/uploads}
+    volumes:
+      - ./data/uploads:/app/data/uploads
+      - ./app:/app/app
+    depends_on:
+      - redis
+    networks:
+      - corpus-forge-network
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: corpus-forge-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - corpus-forge-network
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+
+networks:
+  corpus-forge-network:
+    driver: bridge
