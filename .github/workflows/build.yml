@@ -53,8 +53,8 @@ jobs:
       with:
         context: .
         file: ./deployment/Dockerfile
-        push: ${{ github.event_name != 'pull_request' }}
+        push: ${{ github.event_name != 'pull_request' && secrets.DOCKER_USERNAME != '' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
-        cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/corpus-forge:buildcache
-        cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/corpus-forge:buildcache,mode=max
+        cache-from: type=registry,ref=corpus-forge:buildcache
+        cache-to: type=registry,ref=corpus-forge:buildcache,mode=max

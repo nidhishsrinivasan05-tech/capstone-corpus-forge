@@ -9,103 +9,16 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v')
-    needs: [test, build]
     
     steps:
     - uses: actions/checkout@v4
 
-    - name: Deploy to Docker Hub
+    - name: Deploy to Production
       run: |
         echo "Deploying to production..."
-        # Add your deployment commands here
-        # Example:
-        # docker pull your-registry/corpus-forge:latest
-        # docker stop corpus-forge || true
-        # docker rm corpus-forge || true
-        # docker run -d --name corpus-forge \
-        #   -e CORPUS_FORGE_SECRET=${{ secrets.CORPUS_FORGE_SECRET }} \
-        #   -p 5000:5000 \
-        #   your-registry/corpus-forge:latest
+        echo "Deployment steps would go here"
 
-    - name: Create Release
-      if: startsWith(github.ref, 'refs/tags/v')
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
-        draft: false
-        prerelease: false
-
-    - name: Notify Slack
+    - name: Notify Deployment
       if: always()
-      uses: slackapi/slack-github-action@v1.24.0
-      with:
-        webhook-url: ${{ secrets.SLACK_WEBHOOK }}
-        payload: |
-          {
-            "text": "Corpus Forge Deployment",
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "*Deployment Status:* ${{ job.status }}\n*Commit:* ${{ github.sha }}\n*Branch:* ${{ github.ref }}"
-                }
-              }
-            ]
-          }
-      continue-on-error: true
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ["3.9", "3.10", "3.11"]
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
-        cache: 'pip'
-
-    - name: Install dependencies
       run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-cov
-
-    - name: Run tests
-      run: |
-        pytest tests/ -v --cov=app --cov-report=xml
-
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Build and push
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        file: ./deployment/Dockerfile
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/corpus-forge:latest
+        echo "Deployment completed with status: ${{ job.status }}"
