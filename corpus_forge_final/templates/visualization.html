@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero-panel compact reveal">
+    <div>
+        <p class="eyebrow">Corpus profile</p>
+        <h1>Term visualization</h1>
+    </div>
+    <a class="ghost-link" href="{{ url_for('main.index') }}">Back to dashboard</a>
+</section>
+
+<section class="panel reveal">
+    <div class="panel-header">
+        <div>
+            <p class="eyebrow">Frequency</p>
+            <h2>Top corpus terms</h2>
+        </div>
+        <span class="status-pill"><span id="countLabel">15</span> shown</span>
+    </div>
+    <label for="countSlider">Visible terms</label>
+    <input id="countSlider" type="range" min="5" max="40" value="15">
+    <div id="chart" class="chart"></div>
+</section>
+<script>
+const terms = {{ terms|tojson }};
+</script>
+<script src="{{ url_for('static', filename='js/visualization.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,7 @@
+Architecture and Control Flow Report
+
+Audience: developer. Tone: technical. Format: text. Creativity: low. Extra instructions: none.
+
+## sample.java
+- File included in the application structure.
+- Inspect event handlers, imports, and function calls manually for full control-flow detail.

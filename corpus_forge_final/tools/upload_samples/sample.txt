@@ -1,0 +1,3 @@
+This is a short sample text file for retrieval testing.
+It contains several sentences about corpus forge and retrieval.
+The goal is to ensure uploaded text can be indexed and retrieved.

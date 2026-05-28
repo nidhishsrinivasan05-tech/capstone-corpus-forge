@@ -1,0 +1,44 @@
+<div class="options">
+    {% set prefix = form_id_prefix|default("form") %}
+    <fieldset class="document-picker">
+        <legend>Active documents</legend>
+        {% if documents %}
+            <div class="check-grid">
+                {% for doc in documents %}
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="{{ doc.id }}" {% if selected_ids and doc.id in selected_ids %}checked{% endif %}>
+                        <span>{{ doc.filename }}</span>
+                    </label>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="small">Upload documents before selecting an active corpus.</p>
+        {% endif %}
+    </fieldset>
+    <label for="{{ prefix }}-strategy">Retrieval strategy</label>
+    <select id="{{ prefix }}-strategy" name="strategy">
+        <option value="fixed">Fixed-size chunk retrieval</option>
+        <option value="file">File-level retrieval</option>
+        <option value="compare">Compare both strategies</option>
+    </select>
+    <div class="form-grid">
+        <div>
+            <label for="{{ prefix }}-audience">Audience level</label>
+            <input id="{{ prefix }}-audience" name="audience" value="beginner student">
+        </div>
+        <div>
+            <label for="{{ prefix }}-tone">Tone</label>
+            <input id="{{ prefix }}-tone" name="tone" value="clear and direct">
+        </div>
+    </div>
+    <label for="{{ prefix }}-output-format">Output format</label>
+    <input id="{{ prefix }}-output-format" name="output_format" value="structured bullets">
+    <label for="{{ prefix }}-creativity">Creativity</label>
+    <select id="{{ prefix }}-creativity" name="creativity">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+    <label for="{{ prefix }}-instructions">Extra task instructions</label>
+    <input id="{{ prefix }}-instructions" name="instructions" placeholder="Example: keep answers short and cite document names">
+</div>

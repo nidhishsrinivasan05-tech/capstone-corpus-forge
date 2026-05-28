@@ -1,0 +1,366 @@
+{% extends "base.html" %} {% block content %}
+<section class="hero-panel reveal">
+  <div>
+    <p class="eyebrow">Retrieval-grounded workspace</p>
+    <h1>
+      Forge selected documents into grounded study and engineering artifacts.
+    </h1>
+  </div>
+  <div class="hero-actions">
+    <a class="ghost-link" href="{{ url_for('main.artifacts') }}"
+      >View artifacts</a
+    >
+    <a class="ghost-link" href="{{ url_for('main.visualization') }}"
+      >Open visualization</a
+    >
+    <button
+      id="refresh-stats"
+      class="ghost-link"
+      type="button"
+      aria-label="Refresh stats"
+    >
+      Refresh
+    </button>
+  </div>
+</section>
+
+<section class="metric-grid reveal" aria-label="Corpus metrics">
+  <article class="metric-card">
+    <span class="metric-label">Documents</span>
+    <strong id="stat-documents" class="metric-value"
+      >{{ stats.document_count }}</strong
+    >
+  </article>
+  <article class="metric-card">
+    <span class="metric-label">Indexed words</span>
+    <strong id="stat-words" class="metric-value"
+      >{{ stats.indexed_words }}</strong
+    >
+  </article>
+  <article class="metric-card">
+    <span class="metric-label">Artifacts</span>
+    <strong id="stat-artifacts" class="metric-value"
+      >{{ stats.artifact_count }}</strong
+    >
+  </article>
+  <article class="metric-card">
+    <span class="metric-label">Requests</span>
+    <strong id="stat-requests" class="metric-value"
+      >{{ usage.request_count }}</strong
+    >
+    <span id="stat-tokens" class="metric-note"
+      >{{ usage.token_count }} est. tokens</span
+    >
+  </article>
+</section>
+
+<section class="workspace-grid">
+  <!-- LEFT PANEL: ADD DOCUMENTS -->
+  <div class="panel reveal">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Corpus</p>
+        <h2>Add documents</h2>
+      </div>
+      <div class="source-toggle-container">
+        <div
+          class="status-pill source-pill"
+          id="source-toggle"
+          role="button"
+          tabindex="0"
+          aria-label="Change source type"
+        >
+          <span id="source-label">Local</span>
+        </div>
+        <select
+          id="source-select"
+          class="source-select"
+          aria-label="Source selector"
+        >
+          <option value="local">Local Upload</option>
+          <option value="github">GitHub Repository</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="source-forms" class="source-forms-wrapper">
+      <!-- LOCAL UPLOAD FORM -->
+      <form
+        id="upload-form"
+        class="upload-form active-form"
+        action="{{ url_for('main.upload') }}"
+        method="post"
+        enctype="multipart/form-data"
+        data-loading-text="Uploading"
+      >
+        <label class="file-drop">
+          <input
+            type="file"
+            name="document"
+            required
+            aria-label="Choose document to upload"
+          />
+          <span class="file-icon">+</span>
+          <span>
+            <strong id="file-drop-label">Choose a file</strong>
+            <small
+              >txt, md, pdf, py, js, html, css, java, c, cpp, json, xml, csv,
+              and more</small
+            >
+          </span>
+        </label>
+        <button type="submit" class="primary-btn">Upload document</button>
+      </form>
+
+      <!-- GITHUB IMPORT FORM -->
+      <form
+        id="repo-form"
+        class="repo-form"
+        action="{{ url_for('main.import_repo') }}"
+        method="post"
+        style="display: none"
+        data-loading-text="Fetching repository"
+      >
+        <div class="form-group">
+          <label for="repo_url">GitHub Repository URL</label>
+          <input
+            id="repo_url"
+            name="repo_url"
+            type="url"
+            placeholder="https://github.com/owner/repo"
+            aria-label="GitHub repository URL"
+            autocomplete="off"
+          />
+          <small>Include /tree/branch-name for specific branches</small>
+        </div>
+
+        <div class="form-group">
+          <label for="github_token"
+            >GitHub Token <span class="optional">(optional)</span></label
+          >
+          <input
+            id="github_token"
+            name="github_token"
+            type="password"
+            placeholder="ghp_... for private repos or higher rate limits"
+            aria-label="GitHub personal access token"
+            autocomplete="off"
+          />
+          <small
+            >Required for private repositories. Increases API rate limit.</small
+          >
+        </div>
+
+        <button id="fetch-repo-btn" type="button" class="primary-btn">
+          Fetch Repository
+        </button>
+
+        <div
+          id="repo-status"
+          class="repo-status"
+          style="display: none"
+          aria-live="polite"
+        ></div>
+      </form>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL: ACTIVE CORPUS -->
+  <div class="panel reveal">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Selection</p>
+        <h2>Active corpus</h2>
+      </div>
+      <span class="status-pill">{{ stats.selected_count }} selected</span>
+    </div>
+
+    {% if documents %}
+    <div class="document-list">
+      {% for doc in documents %}
+      <article class="doc-row" data-doc-id="{{ doc.id }}">
+        <div class="doc-content">
+          <div class="doc-header">
+            <span class="doc-filename" title="{{ doc.filename }}"
+              >{{ doc.filename }}</span
+            >
+            <span class="doc-type {% if doc.is_code %}doc-type-code{% endif %}"
+              >{{ doc.filetype|upper }}</span
+            >
+          </div>
+          <p class="doc-meta">{{ doc.word_count }} words</p>
+
+          <div class="doc-preview-section">
+            <!-- Short preview (shown by default) -->
+            <p class="doc-short">{{ doc.short_preview }}</p>
+
+            <!-- Full content (hidden by default) -->
+            <div class="doc-full-preview" style="display: none">
+              <pre class="doc-full-content">{{ doc.full_preview }}</pre>
+            </div>
+
+            <!-- View toggle button -->
+            <button class="btn-view-more" type="button" aria-expanded="false">
+              <span class="view-more-text">View more</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Delete form -->
+        <form
+          class="doc-delete-form"
+          action="{{ url_for('main.delete_document', document_id=doc.id) }}"
+          method="post"
+          data-confirm="Remove '{{ doc.filename }}' from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button
+            class="btn-delete"
+            type="submit"
+            aria-label="Remove {{ doc.filename }}"
+          >
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path
+                d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"
+              ></path>
+            </svg>
+          </button>
+        </form>
+      </article>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">
+        <svg
+          width="48"
+          height="48"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+        >
+          <path
+            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+          ></path>
+          <polyline points="14 2 14 8 20 8"></polyline>
+          <line x1="12" y1="18" x2="12" y2="12"></line>
+          <line x1="9" y1="15" x2="15" y2="15"></line>
+        </svg>
+      </div>
+      <h3>No documents yet</h3>
+      <p>
+        Upload a document or fetch a GitHub repository to activate retrieval and
+        artifact generation.
+      </p>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="action-grid">
+  <div class="panel reveal">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Ask</p>
+        <h2>Grounded answer</h2>
+      </div>
+    </div>
+    <form
+      action="{{ url_for('main.chat') }}"
+      method="post"
+      data-loading-text="Retrieving"
+    >
+      {% set form_id_prefix = "ask" %} {% include "partials/options.html" %}
+      <label for="question">Question</label>
+      <textarea
+        id="question"
+        name="question"
+        required
+        placeholder="Ask a question about the selected corpus"
+      ></textarea>
+      <button type="submit">Ask corpus</button>
+    </form>
+  </div>
+
+  <div class="panel reveal">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Generate</p>
+        <h2>Saved artifact</h2>
+      </div>
+    </div>
+    <form
+      action="{{ url_for('main.generate') }}"
+      method="post"
+      data-loading-text="Generating"
+    >
+      {% set form_id_prefix = "generate" %} {% include "partials/options.html"
+      %}
+      <label for="task">Task</label>
+      <select id="task" name="task">
+        <option value="flashcards">Flashcards</option>
+        <option value="quiz">Quiz</option>
+        <option value="code_review">Code Review Report</option>
+        <option value="architecture">
+          Architecture and Control Flow Report
+        </option>
+      </select>
+      <label for="query">Focus query</label>
+      <input id="query" name="query" value="main ideas" />
+      <button type="submit">Generate and save</button>
+    </form>
+  </div>
+</section>
+
+{% if answer %}
+<section class="panel result reveal" id="answer-panel">
+  <div class="panel-header">
+    <div>
+      <p class="eyebrow">Result</p>
+      <h2>Answer</h2>
+    </div>
+    {% if diagnostics %}
+    <span class="status-pill">{{ diagnostics.results_returned }} sources</span>
+    {% endif %} {% if fallback_used %}
+    <span class="status-pill" title="A fallback retrieval strategy was used"
+      >Fallback match</span
+    >
+    {% endif %}
+  </div>
+  <pre>{{ answer }}</pre>
+  {% if diagnostics %}
+  <div class="diagnostic-strip">
+    <span>Selected: {{ diagnostics.selected_documents }}</span>
+    <span>Indexed words: {{ diagnostics.indexed_words }}</span>
+    <span>Results: {{ diagnostics.results_returned }}</span>
+    <span>Top score: {{ diagnostics.top_score }}</span>
+  </div>
+  {% endif %}
+  <h3>Retrieved context</h3>
+  {% for item in retrieved %}
+  <div class="source">
+    <div class="source-header">
+      <strong>{{ item.document }}</strong>
+      <span class="confidence confidence-{{ item.confidence }}"
+        >{{ item.confidence }}</span
+      >
+    </div>
+    <p class="small">
+      {{ item.strategy }} / score {{ item.score }} / words {{ item.start_word
+      }}-{{ item.end_word }}
+    </p>
+    <p class="small">Matched terms: {{ item.matched_terms|join(", ") }}</p>
+    <p>{{ item.chunk[:500] }}</p>
+  </div>
+  {% endfor %}
+</section>
+{% endif %} {% endblock %}

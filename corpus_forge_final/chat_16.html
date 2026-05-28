@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Corpus Forge</title>
+    <link
+      rel="stylesheet"
+      href="/static/css/style.css"
+    />
+  </head>
+  <body>
+    <header class="app-header">
+      <a
+        class="brand"
+        href="/"
+        aria-label="Corpus Forge dashboard"
+      >
+        <span class="brand-mark">CF</span>
+        <span>
+          <span class="brand-title">Corpus Forge</span>
+          <span class="brand-subtitle">Local retrieval studio</span>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Main navigation">
+        <a
+          class=""
+          href="/"
+          >Dashboard</a
+        >
+        <a
+          class=""
+          href="/artifacts"
+          >Artifacts</a
+        >
+        <a
+          class=""
+          href="/visualization"
+          >Visualization</a
+        >
+      </nav>
+    </header>
+
+    <!-- Persistent toast stack for server flashes and dynamic toasts -->
+    <div class="toast-stack" aria-live="polite" aria-atomic="true">
+        
+    </div>
+
+    <main class="page-shell">
+<section class="hero-panel reveal">
+  <div>
+    <p class="eyebrow">Retrieval-grounded workspace</p>
+    <h1>
+      Forge selected documents into grounded study and engineering artifacts.
+    </h1>
+  </div>
+  <div class="hero-actions">
+    <a class="ghost-link" href="/artifacts"
+      >View artifacts</a
+    >
+    <a class="ghost-link" href="/visualization"
+      >Open visualization</a
+    >
+    <button
+      id="refresh-stats"
+      class="ghost-link"
+      type="button"
+      aria-label="Refresh stats"
+    >
+      Refresh
+    </button>
+  </div>
+</section>
+
+<section class="metric-grid reveal" aria-label="Corpus metrics">
+  <article class="metric-card">
+    <span class="metric-label">Documents</span>
+    <strong id="stat-documents" class="metric-value"
+      >8</strong
+    >
+  </article>
+  <article class="metric-card">
+    <span class="metric-label">Indexed words</span>
+    <strong id="stat-words" class="metric-value"
+      >2763</strong
+    >
+  </article>
+  <article class="metric-card">
+    <span class="metric-label">Artifacts</span>
+    <strong id="stat-artifacts" class="metric-value"
+      >10</strong
+    >
+  </article>
+  <article class="metric-card">
+    <span class="metric-label">Requests</span>
+    <strong id="stat-requests" class="metric-value"
+      >32</strong
+    >
+    <span id="stat-tokens" class="metric-note"
+      >3726 est. tokens</span
+    >
+  </article>
+</section>
+
+<section class="workspace-grid">
+  <div class="panel reveal">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Corpus</p>
+        <h2>Add documents</h2>
+      </div>
+      <span class="status-pill">Local</span>
+    </div>
+    <form
+      class="upload-form"
+      action="/upload"
+      method="post"
+      enctype="multipart/form-data"
+      data-loading-text="Uploading"
+    >
+      <label class="file-drop">
+        <input type="file" name="document" required />
+        <span class="file-icon">+</span>
+        <span>
+          <strong>Choose a file</strong>
+          <small
+            >txt, md, pdf, py, js, html, css, java, c, cpp, json, xml</small
+          >
+        </span>
+      </label>
+      <button type="submit">Upload document</button>
+    </form>
+  </div>
+
+  <div class="panel reveal">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Selection</p>
+        <h2>Active corpus</h2>
+      </div>
+      <span class="status-pill">1 selected</span>
+    </div>
+    
+    <div class="document-list">
+      
+      <article class="doc-row">
+        <div>
+          <strong>sample.py</strong>
+          <p>.py / 12 words</p>
+          <small>def greet(): print(&#34;Hello from sample python file&#34;) if __name__ == &#39;__main__&#39;: greet()</small>
+        </div>
+        <form
+          action="/delete/16"
+          method="post"
+          data-confirm="Remove sample.py from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button class="danger" type="submit">Remove</button>
+        </form>
+      </article>
+      
+      <article class="doc-row">
+        <div>
+          <strong>sample.md</strong>
+          <p>.md / 25 words</p>
+          <small># Sample Markdown This markdown file contains a heading and some descriptive text about testing uploads. It should be extracted as plain text and indexed.</small>
+        </div>
+        <form
+          action="/delete/15"
+          method="post"
+          data-confirm="Remove sample.md from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button class="danger" type="submit">Remove</button>
+        </form>
+      </article>
+      
+      <article class="doc-row">
+        <div>
+          <strong>sample.java</strong>
+          <p>.java / 17 words</p>
+          <small>public class Sample { public static void main(String[] args) { System.out.println(&#34;Hello from Sample Java file&#34;); } }</small>
+        </div>
+        <form
+          action="/delete/14"
+          method="post"
+          data-confirm="Remove sample.java from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button class="danger" type="submit">Remove</button>
+        </form>
+      </article>
+      
+      <article class="doc-row">
+        <div>
+          <strong>options.html</strong>
+          <p>.html / 166 words</p>
+          <small>&lt;div class=&#34;options&#34;&gt; {% set prefix = form_id_prefix|default(&#34;form&#34;) %} &lt;fieldset class=&#34;document-picker&#34;&gt; &lt;legend&gt;Active documents&lt;/legend&gt; {% if documents %} &lt;div class=&#34;check-grid&#34;&gt; {% for doc in documents %} &lt;label class=&#34;checkbox-card&#34;&gt; &lt;input type=&#34;checkbox&#34;</small>
+        </div>
+        <form
+          action="/delete/9"
+          method="post"
+          data-confirm="Remove options.html from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button class="danger" type="submit">Remove</button>
+        </form>
+      </article>
+      
+      <article class="doc-row">
+        <div>
+          <strong>served_app.js</strong>
+          <p>.js / 615 words</p>
+          <small>/* Enhanced front-end utilities: toasts, fetch wrapper, reveal-on-scroll, and improved form handling */ document.addEventListener(&#39;DOMContentLoaded&#39;, () =&gt; { const prefersReduced = window.matchMedia &amp;&amp; window.matchMedia(&#39;(prefers-reduced-motion: reduce)&#39;).matches; function getToastStack() { let</small>
+        </div>
+        <form
+          action="/delete/8"
+          method="post"
+          data-confirm="Remove served_app.js from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button class="danger" type="submit">Remove</button>
+        </form>
+      </article>
+      
+      <article class="doc-row">
+        <div>
+          <strong>sample_test_doc.txt</strong>
+          <p>.txt / 8 words</p>
+          <small>This is a sample document about retrieval testing.</small>
+        </div>
+        <form
+          action="/delete/5"
+          method="post"
+          data-confirm="Remove sample_test_doc.txt from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button class="danger" type="submit">Remove</button>
+        </form>
+      </article>
+      
+      <article class="doc-row">
+        <div>
+          <strong>storage.py</strong>
+          <p>.py / 176 words</p>
+          <small>import os import sqlite3 from datetime import datetime DB_PATH = &#34;data/corpus_forge.db&#34; def get_connection(): os.makedirs(&#34;data&#34;, exist_ok=True) connection = sqlite3.connect(DB_PATH) connection.row_factory = sqlite3.Row return connection def init_db(): os.makedirs(&#34;data/uploads&#34;, exist_ok=True) with</small>
+        </div>
+        <form
+          action="/delete/4"
+          method="post"
+          data-confirm="Remove storage.py from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button class="danger" type="submit">Remove</button>
+        </form>
+      </article>
+      
+      <article class="doc-row">
+        <div>
+          <strong>style.css</strong>
+          <p>.css / 1744 words</p>
+          <small>:root { --ink: #141417; --ink-soft: #272a30; --muted: #67717f; --line: #d9dde3; --line-strong: #c4cad3; --surface: #ffffff; --surface-soft: #f6f7f9; --page: #eef0f3; --brass: #b68a3a; --brass-dark: #7c5b21; --teal: #0f766e; --red: #b42318; --blue: #315d95;</small>
+        </div>
+        <form
+          action="/delete/3"
+          method="post"
+          data-confirm="Remove style.css from the corpus?"
+          data-loading-text="Removing"
+        >
+          <button class="danger" type="submit">Remove</button>
+        </form>
+      </article>
+      
+    </div>
+    
+  </div>
+</section>
+
+<section class="action-grid">
+  <div class="panel reveal">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Ask</p>
+        <h2>Grounded answer</h2>
+      </div>
+    </div>
+    <form
+      action="/chat"
+      method="post"
+      data-loading-text="Retrieving"
+    >
+       <div class="options">
+    
+    <fieldset class="document-picker">
+        <legend>Active documents</legend>
+        
+            <div class="check-grid">
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="16" checked>
+                        <span>sample.py</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="15" >
+                        <span>sample.md</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="14" >
+                        <span>sample.java</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="9" >
+                        <span>options.html</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="8" >
+                        <span>served_app.js</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="5" >
+                        <span>sample_test_doc.txt</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="4" >
+                        <span>storage.py</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="3" >
+                        <span>style.css</span>
+                    </label>
+                
+            </div>
+        
+    </fieldset>
+    <label for="ask-strategy">Retrieval strategy</label>
+    <select id="ask-strategy" name="strategy">
+        <option value="fixed">Fixed-size chunk retrieval</option>
+        <option value="file">File-level retrieval</option>
+        <option value="compare">Compare both strategies</option>
+    </select>
+    <div class="form-grid">
+        <div>
+            <label for="ask-audience">Audience level</label>
+            <input id="ask-audience" name="audience" value="beginner student">
+        </div>
+        <div>
+            <label for="ask-tone">Tone</label>
+            <input id="ask-tone" name="tone" value="clear and direct">
+        </div>
+    </div>
+    <label for="ask-output-format">Output format</label>
+    <input id="ask-output-format" name="output_format" value="structured bullets">
+    <label for="ask-creativity">Creativity</label>
+    <select id="ask-creativity" name="creativity">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+    <label for="ask-instructions">Extra task instructions</label>
+    <input id="ask-instructions" name="instructions" placeholder="Example: keep answers short and cite document names">
+</div>
+      <label for="question">Question</label>
+      <textarea
+        id="question"
+        name="question"
+        required
+        placeholder="Ask a question about the selected corpus"
+      ></textarea>
+      <button type="submit">Ask corpus</button>
+    </form>
+  </div>
+
+  <div class="panel reveal">
+    <div class="panel-header">
+      <div>
+        <p class="eyebrow">Generate</p>
+        <h2>Saved artifact</h2>
+      </div>
+    </div>
+    <form
+      action="/generate"
+      method="post"
+      data-loading-text="Generating"
+    >
+       <div class="options">
+    
+    <fieldset class="document-picker">
+        <legend>Active documents</legend>
+        
+            <div class="check-grid">
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="16" checked>
+                        <span>sample.py</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="15" >
+                        <span>sample.md</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="14" >
+                        <span>sample.java</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="9" >
+                        <span>options.html</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="8" >
+                        <span>served_app.js</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="5" >
+                        <span>sample_test_doc.txt</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="4" >
+                        <span>storage.py</span>
+                    </label>
+                
+                    <label class="checkbox-card">
+                        <input type="checkbox" name="active_documents" value="3" >
+                        <span>style.css</span>
+                    </label>
+                
+            </div>
+        
+    </fieldset>
+    <label for="generate-strategy">Retrieval strategy</label>
+    <select id="generate-strategy" name="strategy">
+        <option value="fixed">Fixed-size chunk retrieval</option>
+        <option value="file">File-level retrieval</option>
+        <option value="compare">Compare both strategies</option>
+    </select>
+    <div class="form-grid">
+        <div>
+            <label for="generate-audience">Audience level</label>
+            <input id="generate-audience" name="audience" value="beginner student">
+        </div>
+        <div>
+            <label for="generate-tone">Tone</label>
+            <input id="generate-tone" name="tone" value="clear and direct">
+        </div>
+    </div>
+    <label for="generate-output-format">Output format</label>
+    <input id="generate-output-format" name="output_format" value="structured bullets">
+    <label for="generate-creativity">Creativity</label>
+    <select id="generate-creativity" name="creativity">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+    </select>
+    <label for="generate-instructions">Extra task instructions</label>
+    <input id="generate-instructions" name="instructions" placeholder="Example: keep answers short and cite document names">
+</div>
+      <label for="task">Task</label>
+      <select id="task" name="task">
+        <option value="flashcards">Flashcards</option>
+        <option value="quiz">Quiz</option>
+        <option value="code_review">Code Review Report</option>
+        <option value="architecture">
+          Architecture and Control Flow Report
+        </option>
+      </select>
+      <label for="query">Focus query</label>
+      <input id="query" name="query" value="main ideas" />
+      <button type="submit">Generate and save</button>
+    </form>
+  </div>
+</section>
+
+
+<section class="panel result reveal" id="answer-panel">
+  <div class="panel-header">
+    <div>
+      <p class="eyebrow">Result</p>
+      <h2>Answer</h2>
+    </div>
+    
+    <span class="status-pill">1 sources</span>
+    
+  </div>
+  <pre>Grounded answer
+
+Audience: beginner student. Tone: clear and direct. Format: structured bullets. Creativity: low. Extra instructions: none.
+
+Answer based only on retrieved evidence:
+def greet(): print(&#34;Hello from sample python file&#34;) if __name__ == &#39;__main__&#39;: greet()
+
+Evidence used:
+- sample.py | selected document overview | words 1-12 | confidence: low | matched: about, document
+  def greet(): print(&#34;Hello from sample python file&#34;) if __name__ == &#39;__main__&#39;: greet()
+
+Retrieval check: 1 result(s), 1 selected document(s), top score 0.1.</pre>
+  
+  <div class="diagnostic-strip">
+    <span>Selected: 1</span>
+    <span>Indexed words: 12</span>
+    <span>Results: 1</span>
+    <span>Top score: 0.1</span>
+  </div>
+  
+  <h3>Retrieved context</h3>
+  
+  <div class="source">
+    <div class="source-header">
+      <strong>sample.py</strong>
+      <span class="confidence confidence-low"
+        >low</span
+      >
+    </div>
+    <p class="small">
+      selected document overview / score 0.1 / words 1-12
+    </p>
+    <p class="small">Matched terms: about, document</p>
+    <p>def greet(): print(&#34;Hello from sample python file&#34;) if __name__ == &#39;__main__&#39;: greet()</p>
+  </div>
+  
+</section>
+ </main>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="panel error reveal">
+    <p class="eyebrow">Interrupted</p>
+    <h2>Error</h2>
+    <p>{{ message }}</p>
+    <a class="ghost-link" href="{{ url_for('main.index') }}">Return to dashboard</a>
+</section>
+{% endblock %}

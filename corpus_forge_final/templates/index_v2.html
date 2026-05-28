@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corpus Forge - Document Ingestion & RAG Studio</title>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/ingestion.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">📚 Corpus Forge</h1>
+                <p class="tagline">Local Retrieval-Augmented Generation Studio</p>
+            </div>
+        </header>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- LEFT PANEL: Document Ingestion -->
+            <section class="left-panel">
+                <h2>Add Documents</h2>
+
+                <!-- Source Selector -->
+                <div class="source-selector-container">
+                    <button class="source-toggle" id="source-toggle">
+                        <span id="source-label">Local</span>
+                    </button>
+                    <select id="source-select">
+                        <option value="local">Local Files</option>
+                        <option value="github">GitHub Repository</option>
+                    </select>
+                </div>
+
+                <!-- LOCAL FILE UPLOAD FORM -->
+                <form id="upload-form" class="form-section active-form upload-form">
+                    <div class="file-input-wrapper">
+                        <input type="file" id="file-input" name="file" accept="*" required>
+                        <label for="file-input" class="file-input-label">
+                            <span class="file-input-hint">
+                                Click or drag file here<br>
+                                <small>Supports: PDF, TXT, JSON, CSV, HTML, Code files</small>
+                            </span>
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        📤 Upload & Process
+                    </button>
+                </form>
+
+                <!-- GITHUB REPOSITORY FORM -->
+                <form id="repo-form" class="form-section repo-form">
+                    <div class="form-group">
+                        <label class="form-label">GitHub Repository URL</label>
+                        <input
+                            type="text"
+                            id="repo_url"
+                            name="repo_url"
+                            class="form-input"
+                            placeholder="https://github.com/owner/repository"
+                            required
+                        >
+                        <small class="form-hint">
+                            Public or private (requires personal access token)
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            GitHub Personal Access Token (Optional)
+                        </label>
+                        <input
+                            type="password"
+                            id="github_token"
+                            name="github_token"
+                            class="form-input"
+                            placeholder="Leave blank for public repos"
+                        >
+                        <small class="form-hint">
+                            Only sent to GitHub API, never stored
+                        </small>
+                    </div>
+
+                    <div id="repo-status"></div>
+
+                    <button type="button" id="fetch-repo-btn" class="btn btn-primary">
+                        🔗 Fetch Repository
+                    </button>
+                </form>
+
+                <!-- USAGE STATS -->
+                <div class="stats-box">
+                    <h3>📊 Usage</h3>
+                    <div class="stat-item">
+                        <span>Documents:</span>
+                        <strong id="doc-count">{{ documents|length }}</strong>
+                    </div>
+                    <div class="stat-item">
+                        <span>Tokens:</span>
+                        <strong id="token-count">{{ usage.tokens|default(0, true) }}</strong>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RIGHT PANEL: Document Preview & Management -->
+            <section class="right-panel">
+                <h2>📄 Active Corpus</h2>
+
+                {% if documents %}
+                    <div class="documents-list">
+                        {% for doc in documents %}
+                            <div class="doc-row" data-doc-id="{{ doc.id }}">
+                                <div class="doc-header">
+                                    <div class="doc-info">
+                                        <div class="doc-name">
+                                            {{ doc.filename }}
+                                        </div>
+                                        <div class="doc-meta">
+                                            <span class="doc-type">{{ doc.filetype }}</span>
+                                            <span class="doc-size">{{ (doc.text|length) }} chars</span>
+                                            <span class="doc-date">{{ doc.created_at }}</span>
+                                        </div>
+                                    </div>
+                                    <button class="btn-actions" title="Document actions">⋮</button>
+                                </div>
+
+                                <!-- SHORT PREVIEW (Always visible) -->
+                                <div class="doc-preview-short">
+                                    {{ doc.text[:100] }}{% if doc.text|length > 100 %}...{% endif %}
+                                </div>
+
+                                <!-- FULL PREVIEW (Expandable) -->
+                                <div class="doc-full-preview" style="display: none;">
+                                    <pre><code>{{ doc.text }}</code></pre>
+                                </div>
+
+                                <!-- ACTIONS -->
+                                <div class="doc-actions">
+                                    <button class="btn-view-more" data-expanded="false">
+                                        View more
+                                    </button>
+                                    <form method="POST" action="{{ url_for('main.delete_document', doc_id=doc.id) }}" style="display: inline;">
+                                        <button type="submit" class="btn btn-danger" 
+                                                onclick="return confirm('Delete this document?')">
+                                            🗑️ Delete
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>📭 No documents loaded yet.</p>
+                        <p>Start by uploading files or importing a GitHub repository.</p>
+                    </div>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="{{ url_for('static', filename='js/document-ingestion.js') }}"></script>
+    <script>
+        /**
+         * Toast notification system
+         */
+        class ToastNotifier {
+            constructor() {
+                this.container = document.getElementById('toast-container');
+                document.addEventListener('show-toast', (e) => this.show(e.detail));
+            }
+
+            show(options) {
+                const { message, type = 'info', duration = 4000 } = options;
+                
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.textContent = message;
+                toast.setAttribute('role', 'alert');
+
+                this.container.appendChild(toast);
+
+                setTimeout(() => {
+                    toast.classList.add('exit');
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
+            }
+        }
+
+        new ToastNotifier();
+
+        /**
+         * Drag & drop support for file input
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('file-input');
+            const fileLabel = document.querySelector('.file-input-label');
+
+            if (fileInput && fileLabel) {
+                ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(event => {
+                    fileLabel.addEventListener(event, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    });
+                });
+
+                fileLabel.addEventListener('dragenter', () => {
+                    fileLabel.style.borderColor = 'var(--primary-color)';
+                    fileLabel.style.background = 'rgba(37, 99, 235, 0.05)';
+                });
+
+                fileLabel.addEventListener('dragleave', () => {
+                    fileLabel.style.borderColor = 'var(--bg-border)';
+                    fileLabel.style.background = 'white';
+                });
+
+                fileLabel.addEventListener('drop', (e) => {
+                    fileLabel.style.borderColor = 'var(--bg-border)';
+                    fileLabel.style.background = 'white';
+
+                    const dt = e.dataTransfer;
+                    const files = dt.files;
+                    fileInput.files = files;
+
+                    // Trigger form submission
+                    const form = fileInput.closest('form');
+                    if (form) {
+                        const event = new Event('submit', { bubbles: true });
+                        form.dispatchEvent(event);
+                    }
+                });
+            }
+        });
+
+        /**
+         * Code syntax highlighting in previews
+         */
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+            });
+        });
+    </script>
+</body>
+</html>

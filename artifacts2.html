@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Corpus Forge</title>
+    <link
+      rel="stylesheet"
+      href="/static/css/style.css"
+    />
+  </head>
+  <body>
+    <header class="app-header">
+      <a
+        class="brand"
+        href="/"
+        aria-label="Corpus Forge dashboard"
+      >
+        <span class="brand-mark">CF</span>
+        <span>
+          <span class="brand-title">Corpus Forge</span>
+          <span class="brand-subtitle">Local retrieval studio</span>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Main navigation">
+        <a
+          class=""
+          href="/"
+          >Dashboard</a
+        >
+        <a
+          class="active"
+          href="/artifacts"
+          >Artifacts</a
+        >
+        <a
+          class=""
+          href="/visualization"
+          >Visualization</a
+        >
+      </nav>
+    </header>
+
+    <!-- Persistent toast stack for server flashes and dynamic toasts -->
+    <div class="toast-stack" aria-live="polite" aria-atomic="true">
+        
+    </div>
+
+    <main class="page-shell">
+<section class="hero-panel compact reveal">
+    <div>
+        <p class="eyebrow">Saved outputs</p>
+        <h1>Generated artifacts</h1>
+    </div>
+    <a class="ghost-link" href="/">Back to dashboard</a>
+</section>
+
+<section class="panel reveal">
+    
+        
+            <article class="artifact">
+                <div class="artifact-header">
+                    <div>
+                        <span class="status-pill">code_review</span>
+                        <h3>Code Review Report</h3>
+                    </div>
+                    <span class="artifact-date">2026-05-22 00:00:47</span>
+                </div>
+                <pre>Code Review Report
+
+Audience: beginner student. Tone: clear and direct. Format: structured bullets. Creativity: low. Extra instructions: none.
+
+## sample_code.java
+- Lines: 2
+- Functions/classes: 0
+- Long lines over 100 characters: 1
+- No high-risk pattern detected by the lightweight static checks.
+- Recommended next test: add one positive case, one empty-input case, and one malformed-input case for this file.
+</pre>
+                <button class="secondary copy-artifact" type="button">Copy artifact</button>
+            </article>
+        
+    
+</section>
+</main>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>

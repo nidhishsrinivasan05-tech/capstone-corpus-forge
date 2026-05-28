@@ -1,0 +1,10 @@
+Code Review Report
+
+Audience: developer. Tone: technical. Format: text. Creativity: low. Extra instructions: none.
+
+## sample.java
+- Lines: 5
+- Functions/classes: 1
+- Long lines over 100 characters: 0
+- No high-risk pattern detected by the lightweight static checks.
+- Recommended next test: add one positive case, one empty-input case, and one malformed-input case for this file.

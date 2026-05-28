@@ -1,0 +1,300 @@
+GENERATIVE AI FOR SOFTWARE ENGINEERINGCapstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Design and implement a w eb-based syst em that tr ansf orms a he terogeneous c orpus int o actionable
+kno wledg e thr ough:
+retrieval,
+prompting.
+Your syst em must enable user s to import , organiz e, explor e, and int eract with c ollections of
+documents using AI-po wered w orkflo ws.
+The g oal of this pr oject is not simply t o build an applic ation.
+The g oal is t o demonstr ate your ability t o:
+learn unf amiliar t echnic al conc epts quickly ,
+use AI-assist ed de velopment t ools eﬀ ectiv ely,
+mak e sound engineering decisions under unc ertainty ,
+evaluat e trade -oﬀs,
+and deliv er a w orking softw are syst em.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+By comple ting this pr oject , you should demonstr ate your ability t o:
+design and implement an AI-po wered softw are syst em;
+apply R etrieval-A ugment ed Gener ation (R AG) techniques t o diﬀ erent document types;
+engineer pr ompts t o pr oduc e reliable and usef ul outputs;
+use AI-assist ed de velopment : Visual St udio Code Copilot , as le arning, debugging, design, and
+implement ation p artner s;
+explain a syst em ar chit ecture and justify engineering decisions;
+critic ally e valuat e both y our syst em and the AI t ools used during de velopment .Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Teams of 3 students
+Deadlines:
+GitHub R epos Submission: May 22, 10:00 PM
+Present ation: May 28  (see Pr esent ation Guidelines belo w)Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+One r eposit ory per t eam.
+One member of the t eam:
+1. clones 
+2. creates a ne w GitHub r eposit ory named 'c apst one -corpus -forge'. The r eposit ory must be public
+to giv e easy ac cess t o the other member s of the t eam.
+3. links the cloned c apst one pr oject r eposit ory (1) t o the ne w reposit ory in (2).
+The other member s of the t eam clone the ne wly cr eated GitHub r eposit ory (2).
+The t eam r eposit ory must be cr eated and sent t o me b y the end of t oday' s class.
+Each t eam member clones and pushes t o the same r eposit ory.
+Apply g ood sour ce contr ol and softw are engineering pr actic es:
+meaningf ul commit messag es. U se 'f eat', 'fix' , 'refactor', 'docs' , etc. pr efixes to indic ate the type
+of chang e.
+commit e arly and oft en.
+you may use br anches if y ou ar e comf ortable with Git , but the main br anch should alw ays be in
+a runnable st ate.Capstone Pr oject Kick-Off  - Course
+https:// github .com/bcs -s2-2026/ capst one -corpus -forge
+Generative AI for Software Engineering - EPIT A - 2026
+
+Your pr oject is c omposed of two lay ers:Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+You must implement a working w eb applic ation .
+The applic ation does not need polished visual design, but the user e xperienc e must be f unctional,
+coher ent, and allo w ac cess t o all implement ed f eatures.
+Your platf orm must support the f ollo wing c ore capabilities.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Users must be able t o import and pr ocess documents fr om at le ast 3 diﬀ erent file types , including:
+plain t ext and/ or mark down
+PDF
+sour ce code files
+Examples:
+.txt
+.md
+.pdf
+.py
+.js
+The syst em must pr ocess these documents int o a f orm suit able f or retrieval and AI int eraction.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Users must be able t o:
+add documents
+remo ve documents
+browse av ailable documents
+select which documents ar e activ e for AI int eractionsCapstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Users must be able t o int eract with the select ed c orpus thr ough AI-po wered, r etrieval-gr ounded
+workflo ws.
+The syst em must support the f ollo wing c orpus -grounded f eatures:
+Chat -based e xplor ation and question answ ering
+Interactiv e Flashc ards and Quizz es
+For sour ce code c orpor a:
+Code R eview Report
+Archit ecture and Contr ol Flo w Report
+Flashc ards, quizz es, and r eports must per sist be tween applic ation runs.
+Users must be able t o influenc e gener ation thr ough pr ompts or p arame ters, as described in the ne xt
+section.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Users must be able t o influenc e AI behavior thr ough cust omiz able pr ompts or p arame ters.
+Examples:
+audienc e level
+response f ormat
+creativity le vel
+tone
+task instructionsCapstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Documents, me tadat a, and g ener ated artif acts must per sist be tween applic ation runs.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Your applic ation must e xpose AI usag e inf ormation.
+At minimum:
+number of r equests
+token usag e
+Additional me trics ar e enc ouraged.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Each t eam must select two engineering challeng es.
+You ar e enc ouraged t o select challeng es that push y our t echnic al comf ort z one.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Implement and c omp are at le ast two retriev al str ategies .
+Examples:
+fixed-siz e, overlapping chunking
+semantic chunking
+file-level retrieval
+function-le vel retrieval
+hybrid k eyword + v ector se arch
+metadat a filt ering
+You must e valuat e:
+what w orked
+what f ailed
+when e ach str ategy is appr opriat eCapstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Iterativ ely impr ove pr ompts f or a specific t ask.
+Examples:
+reducing hallucinations
+impr oving quiz quality
+impr oving c ode e xplanations
+impr oving cit ation quality
+You must document pr ompt e volution.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Gener ate an int eractiv e visualiz ation deriv ed fr om the c orpus.
+Examples:
+word cloud
+conc ept gr aph
+Users must be able t o int eract with the visualiz ation.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Design t ests f or y our syst em.
+Examples:
+unit t ests
+integration t ests
+edg e-case t ests
+malf ormed input handling
+You must int entionally t est f ailur e sc enarios.
+Examples:
+empty c orpus
+duplic ate files
+conflicting documents
+corrupt ed filesCapstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+You may choose y our o wn:
+programming languag e(s)
+frame works
+database(s)
+frontend t echnologies
+backend t echnologies: t eams ar e str ongly enc ouraged t o use Python unless the y can justify an
+alternativ e stack.
+You may use:
+Google GenAI APIs
+vector dat abases such as Chr omaDB
+AI-assist ed de velopment : VS Code Copilot .
+Do not use Claude or Code x or ChatGP T or any other AI c ode g ener ation t ool unless it has been
+discussed and appr oved b y me. In that c ase, y ou must document ho w you used it in the AI
+Collabor ation section of y our r eport and include y our pr ompt hist ory in the deliv erables.
+Your o wn cust om ag ents (Mak e sur e to document and mention them in y our r eport)Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+You may use AI t o:
+learn
+design
+debug
+implement
+test
+document
+Mak e sur e you br eak do wn y our implement ation int o small, manag eable t asks and use AI t o assist with
+specific pr oblems or questions that arise during de velopment .
+However, you may not use AI t o:
+gener ate the entir e syst em or lar ge components in one st ep.
+gener ate the pr oject' s final REPOR T.md (see Deliv erables section belo w).Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+A runnable w eb applic ation running loc ally on the user' s machine.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+GitHub r epo with sour ce code, document ation, and instructions t o run the applic ation loc ally.
+Documents:
+README.md with se tup instructions
+REPOR T.md with t echnic al report (see belo w)
+Prompt hist ory file(s):
+JOURNAL.md
+prompt_hist ory.md
+Archit ecture, Code Explor er, Flashc ards and Quiz C ustom Ag ents outputs in a f older c alled
+'docs' .
+Present ation slides (see Pr esent ation Guidelines belo w)
+Group Pr esent ation named group_presentation.pdf
+Individual Pr esent ation named individual_presentation_student_name.pdfCapstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Your r eport must document :Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+THE TEAM MEMBERS
+Names, EPIT A email addr esses, and GitHub usernames of all t eam member s.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+INITIAL DESIGN
+initial ar chit ecture
+assumptions
+technic al choic esCapstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+ENGINEERING DECISIONS
+For e ach major decision:
+what alt ernativ es w ere consider ed?
+why w as this solution chosen ?Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+WHO DID WHAT?
+Document ho w the pr oject w as originally divided among e ach t eam member .
+Document ho w responsibilities possibly e volved o ver time.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+AI COLLABORATION
+Document ho w AI t ools w ere used.
+What t ools w ere used f or what purposes ?
+How did AI influenc e design and implement ation decisions ?
+How did AI imp act y our le arning and de velopment pr ocess?
+How did y ou e valuat e AI-g ener ated sugg estions ?
+How did y ou de tect and handle AI err ors or limit ations ?Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+FAILURES AND ITERATIONS
+Document :
+what f ailed?
+what surprised y ou?
+what r equir ed r edesign ?Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+“WHEN AI FAILED OR WAS WRONG”
+Document c ases wher e AI-g ener ated advic e, code, or e xplanations w ere:
+incomple te
+misle ading
+incorrect
+ineﬀicient
+Explain ho w you de tected the issue and ho w you r esolv ed it .Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+LESSONS LEARNED
+Reflect on:
+technic al gr owth
+workflo w impr ovements
+Strengths and limit ations of AI-assist ed de velopmentCapstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+Each t eam will giv e a 15-minut e pr esent ation  of their pr oject , follo wed b y a 5-minut e Q&A  session
+for a t otal of 20 minut es per t eam.
+Breakdown of pr esent ation time:
+Demo: 3 minut es
+Group Pr esent ation + Individual Contributions: 12 minut es
+Main Pr esent ation: 3 minut es
+Individual Pr esent ations: 3 x 3 minut es = 9 minut es
+Or y ou may choose t o do a single gr oup pr esent ation wher e each member c ontribut es to
+diﬀerent sections, as long as the t otal time is 12 minut es.
+Q&A: 5 minut es
+Not es: F or those who anticip ate not being able t o att end the pr esent ation on the scheduled dat e
+(May 28):
+Please inf orm Sc olarit é and me as soon as possible.
+Plan on att ending r emot ely.
+You will be e xpect ed t o pr esent y our individual c ontributions during the pr esent ation, so mak e
+sure to coordinat e with y our t eam and pr epare your slides ac cordingly .Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026
+
+This pr oject e valuat es y our engineering judgment , not just y our ability t o ship f eatures. A "perf ect"
+applic ation that y ou c annot e xplain is w orth less than a c omple x challeng e ac comp anied b y a rig orous
+post -mort em.
+I prioritiz e:
+AI-Enhanc ed L earning:  Using AI as a high-fidelity t utor to mast er ne w conc epts and t echnologies,
+rather than a short cut t o bypass the le arning pr ocess.
+Evidenc e-Based Decisions:  Justifying y our ar chit ecture and pr ompt choic es thr ough
+experiment ation and the "p aper tr ail" in y our logs.
+Honest It eration:  I value the document ation of a maojr f ailur e and the subsequent r edesign mor e
+than a pr oject that w orked on the fir st tr y by playing it saf e.
+Bott om Line:  Higher marks ar e aw arded t o teams that demonstr ate a " smart" p artner ship with AI—
+leveraging it t o ac celer ate their t echnic al gr owth—and c an critic ally analy ze the tr ade -oﬀs of their final
+syst em.Capstone Pr oject Kick-Off  - Course
+Generative AI for Software Engineering - EPIT A - 2026

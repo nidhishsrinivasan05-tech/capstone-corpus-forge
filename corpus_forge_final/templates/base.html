@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Corpus Forge</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="app-header">
+      <a
+        class="brand"
+        href="{{ url_for('main.index') }}"
+        aria-label="Corpus Forge dashboard"
+      >
+        <span class="brand-mark">CF</span>
+        <span>
+          <span class="brand-title">Corpus Forge</span>
+          <span class="brand-subtitle">Local retrieval studio</span>
+        </span>
+      </a>
+      <nav class="top-nav" aria-label="Main navigation">
+        <a
+          class="{% if request.endpoint == 'main.index' %}active{% endif %}"
+          href="{{ url_for('main.index') }}"
+          >Dashboard</a
+        >
+        <a
+          class="{% if request.endpoint == 'main.artifacts' %}active{% endif %}"
+          href="{{ url_for('main.artifacts') }}"
+          >Artifacts</a
+        >
+        <a
+          class="{% if request.endpoint == 'main.visualization' %}active{% endif %}"
+          href="{{ url_for('main.visualization') }}"
+          >Visualization</a
+        >
+      </nav>
+    </header>
+
+    <!-- Persistent toast stack for server flashes and dynamic toasts -->
+    <div class="toast-stack" aria-live="polite" aria-atomic="true">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="toast toast-{{ category }}">
+        <span class="toast-dot"></span>
+        <span>{{ message }}</span>
+      </div>
+      {% endfor %} {% endif %} {% endwith %}
+    </div>
+
+    <main class="page-shell">{% block content %}{% endblock %}</main>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+  </body>
+</html>

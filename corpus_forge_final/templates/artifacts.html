@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero-panel compact reveal">
+    <div>
+        <p class="eyebrow">Saved outputs</p>
+        <h1>Generated artifacts</h1>
+    </div>
+    <a class="ghost-link" href="{{ url_for('main.index') }}">Back to dashboard</a>
+</section>
+
+<section class="panel reveal">
+    {% if artifacts %}
+        {% for artifact in artifacts %}
+            <article class="artifact">
+                <div class="artifact-header">
+                    <div>
+                        <span class="status-pill">{{ artifact.kind }}</span>
+                        <h3>{{ artifact.title }}</h3>
+                    </div>
+                    <span class="artifact-date">{{ artifact.created_at }}</span>
+                </div>
+                <pre>{{ artifact.content }}</pre>
+                <button class="secondary copy-artifact" type="button">Copy artifact</button>
+            </article>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <h3>No artifacts generated yet</h3>
+            <p>Create flashcards, quizzes, or reports from the dashboard.</p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}
